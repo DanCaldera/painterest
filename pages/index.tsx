@@ -24,7 +24,7 @@ export default function Example() {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="lg:p-10 bg-gradient-to-r from-purple-200 via-pink-200 to-red-200">
+    <div className="lg:p-10 bg-gradient-to-r from-purple-50 via-pink-50 to-red-50">
       <div className="h-full flex flex-col bg-white p-2 rounded-xl border shadow-lg">
         {/* Top nav*/}
         <header className="flex-shrink-0 relative h-16 bg-white flex items-center my-2">
