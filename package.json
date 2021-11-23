@@ -9,16 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.4.2",
+    "@heroicons/react": "^1.0.5",
     "next": "12.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "swr": "^1.0.1"
   },
   "devDependencies": {
+    "@tailwindcss/aspect-ratio": "^0.3.0",
+    "@tailwindcss/forms": "^0.3.4",
+    "@tailwindcss/line-clamp": "^0.2.2",
     "@types/react": "^17.0.36",
     "autoprefixer": "^10.4.0",
-    "eslint": "7.32.0",
-    "eslint-config-next": "11.1.0",
     "postcss": "^8.3.11",
     "prettier": "^2.4.1",
     "tailwindcss": "^2.2.19",
