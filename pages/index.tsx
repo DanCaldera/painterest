@@ -4,8 +4,8 @@ import { SearchIcon } from '@heroicons/react/solid'
 import { Fragment, useState } from 'react'
 
 const user = {
-  name: 'Whitney Francis',
-  email: 'whitneyfrancis@example.com',
+  name: 'Any Venegas',
+  email: 'any@example.com',
   imageUrl:
     'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
@@ -14,55 +14,7 @@ const sidebarNavigation = [
   { name: 'Open', href: '#', icon: HomeIcon, current: true },
   { name: 'Open', href: '#', icon: UserIcon, current: false },
 ]
-const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Sign out', href: '#' },
-]
-
-const files = [
-  {
-    title: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-  },
-  {
-    title: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-  },
-  {
-    title: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-  },
-  {
-    title: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-  },
-  {
-    title: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-  },
-  {
-    title: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-  },
-  {
-    title: 'IMG_4985.HEIC',
-    size: '3.9 MB',
-    source:
-      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-  },
-]
+const userNavigation = [{ name: 'Sign out', href: '#' }]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -100,7 +52,7 @@ export default function Example() {
           </div>
 
           {/* Menu button area */}
-          <div className="absolute right-0 pr-4 mt-10 flex items-center sm:pr-6 lg:hidden">
+          <div className="absolute right-0 pr-10 mt-16 flex items-center sm:pr-6 lg:hidden">
             {/* Mobile menu button */}
             <button
               type="button"
@@ -260,7 +212,7 @@ export default function Example() {
               </li>
             ))}
           </ul> */}
-          <section id="photos" className="mx-8">
+          <section id="photos" className="mx-8 my-12">
             <img
               className="p-2 rounded-xl"
               src="https://images.unsplash.com/photo-1422360902398-0a91ff2c1a1f?dpr=1&auto=compress,format&fit=crop&w=716&h=&q=80&cs=tinysrgb&crop="
@@ -289,6 +241,42 @@ export default function Example() {
               className="p-2 rounded-xl"
               src="https://images.unsplash.com/photo-1504125130065-19cd3d71c27a?dpr=1&auto=compress,format&fit=crop&w=334&h=&q=80&cs=tinysrgb&crop="
               alt="Serious cat"
+            />
+            <img
+              className="p-2 rounded-xl"
+              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
+            />
+            <img
+              className="p-2 rounded-xl"
+              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
+            />
+            <img
+              className="p-2 rounded-xl"
+              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
+            />
+            <img
+              className="p-2 rounded-xl"
+              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
+            />
+            <img
+              className="p-2 rounded-xl"
+              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
+            />
+            <img
+              className="p-2 rounded-xl"
+              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
+            />
+            <img
+              className="p-2 rounded-xl"
+              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
+            />
+            <img
+              className="p-2 rounded-xl"
+              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
+            />
+            <img
+              className="p-2 rounded-xl"
+              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
             />
             <img
               className="p-2 rounded-xl"
