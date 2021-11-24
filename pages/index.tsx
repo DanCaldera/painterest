@@ -3,9 +3,8 @@ import { HomeIcon, MenuIcon, UserIcon, XIcon } from '@heroicons/react/outline'
 import { SearchIcon } from '@heroicons/react/solid'
 import { Fragment, useEffect, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
-import { axiosInstance } from '../lib/axiosConfig/axiosSetup'
-import Head from 'next/head'
 import Meta from '../components/Meta'
+import { axiosInstance } from '../lib/axiosConfig/axiosSetup'
 
 const user = {
   name: 'Any Venegas',
@@ -26,7 +25,7 @@ function classNames(...classes) {
 
 export default function Example() {
   const [open, setOpen] = useState(false)
-  const [images, setImages] = useState<any>({})
+  const [images, setImages] = useState<any>(null)
   const [search, setSearch] = useState('')
 
   useEffect(() => {
