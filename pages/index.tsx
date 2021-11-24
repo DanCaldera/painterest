@@ -1,7 +1,8 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { HomeIcon, MenuIcon, UserIcon, XIcon } from '@heroicons/react/outline'
 import { SearchIcon } from '@heroicons/react/solid'
-import { Fragment, useState } from 'react'
+import axios from 'axios'
+import { Fragment, useEffect, useState } from 'react'
 
 const user = {
   name: 'Any Venegas',
@@ -12,7 +13,7 @@ const user = {
 
 const sidebarNavigation = [
   { name: 'Open', href: '#', icon: HomeIcon, current: true },
-  { name: 'Open', href: '#', icon: UserIcon, current: false },
+  { name: 'User', href: '#', icon: UserIcon, current: false },
 ]
 const userNavigation = [{ name: 'Sign out', href: '#' }]
 
@@ -20,8 +21,27 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+const instance = axios.create({
+  baseURL: 'https://api.imgur.com/',
+  timeout: 1000,
+  headers: {
+    Authorization: 'Bearer ' + 'd611872356a1a8421c74561e9c1e0e3db41f0d9f',
+  },
+})
+
 export default function Example() {
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    const fetchInitialPosts = async () => {
+      console.log('1')
+
+      const response = await instance.get('3/gallery/hot/viral/0')
+
+      console.log(response)
+    }
+    fetchInitialPosts()
+  }, [])
 
   return (
     <div className="lg:p-10 bg-gradient-to-r from-purple-50 via-pink-50 to-red-50">
