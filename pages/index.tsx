@@ -1,8 +1,8 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { HomeIcon, MenuIcon, UserIcon, XIcon } from '@heroicons/react/outline'
 import { SearchIcon } from '@heroicons/react/solid'
-import axios from 'axios'
 import { Fragment, useEffect, useState } from 'react'
+import { axiosInstance } from '../lib/axiosConfig/axiosSetup'
 
 const user = {
   name: 'Any Venegas',
@@ -21,27 +21,22 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const instance = axios.create({
-  baseURL: 'https://api.imgur.com/',
-  timeout: 1000,
-  headers: {
-    Authorization: 'Bearer ' + 'd611872356a1a8421c74561e9c1e0e3db41f0d9f',
-  },
-})
-
 export default function Example() {
   const [open, setOpen] = useState(false)
+  const [images, setImages] = useState([])
 
   useEffect(() => {
     const fetchInitialPosts = async () => {
-      console.log('1')
+      const response = await axiosInstance.get('3/gallery/hot/viral/0')
 
-      const response = await instance.get('3/gallery/hot/viral/0')
-
-      console.log(response)
+      if (response.status === 200) {
+        setImages(response.data.data)
+      }
     }
     fetchInitialPosts()
   }, [])
+
+  console.log('images', images)
 
   return (
     <div className="lg:p-10 bg-gradient-to-r from-purple-50 via-pink-50 to-red-50">
@@ -213,95 +208,15 @@ export default function Example() {
             </div>
           </nav>
 
-          {/* <ul
-            role="list"
-            className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8 mx-8 py-12 lg:py-0 image-container"
-          >
-            {files.map((file) => (
-              <li key={file.source} className="relative">
-                <div className="group block w-full aspect-w-10 aspect-h-7 rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 focus-within:ring-indigo-500 overflow-hidden">
-                  <img src={file.source} alt="" className="object-cover pointer-events-none group-hover:opacity-75" />
-                  <button type="button" className="absolute inset-0 focus:outline-none">
-                    <span className="sr-only">View details for {file.title}</span>
-                  </button>
-                </div>
-                <p className="mt-2 block text-sm font-medium text-gray-900 truncate pointer-events-none">
-                  {file.title}
-                </p>
-                <p className="block text-sm font-medium text-gray-500 pointer-events-none">{file.size}</p>
-              </li>
-            ))}
-          </ul> */}
           <section id="photos" className="mx-8 my-12">
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1422360902398-0a91ff2c1a1f?dpr=1&auto=compress,format&fit=crop&w=716&h=&q=80&cs=tinysrgb&crop="
-              alt="Serious cat"
-            />
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1469692422776-14abcfa4b525?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
-            />
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1472073834672-adb08feda350?dpr=1&auto=compress,format&fit=crop&w=334&h=&q=80&cs=tinysrgb&crop="
-              alt="Serious cat"
-            />
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1500305444797-4f07d56c170a?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
-              alt="Serious cat"
-            />
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1476817198778-f2926d0a4fc1?dpr=1&auto=compress,format&fit=crop&w=334&h=&q=80&cs=tinysrgb&crop="
-              alt="Serious cat"
-            />
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1504125130065-19cd3d71c27a?dpr=1&auto=compress,format&fit=crop&w=334&h=&q=80&cs=tinysrgb&crop="
-              alt="Serious cat"
-            />
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
-            />
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
-            />
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
-            />
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
-            />
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
-            />
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
-            />
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
-            />
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
-            />
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
-            />
-            <img
-              className="p-2 rounded-xl"
-              src="https://images.unsplash.com/photo-1506792971018-6b5d71252abc?dpr=1&auto=compress,format&fit=crop&w=750&h=&q=80&cs=tinysrgb&crop="
-            />
+            {images.length &&
+              images.map(
+                (item) =>
+                  item.images &&
+                  item.images[0].link.includes('jpg') && (
+                    <img className="p-2 rounded-xl" src={item.images ? item.images[0].link : ''} alt="Image" />
+                  )
+              )}
           </section>
         </div>
       </div>
