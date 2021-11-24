@@ -23,11 +23,12 @@ function classNames(...classes) {
 
 export default function Example() {
   const [open, setOpen] = useState(false)
-  const [images, setImages] = useState([])
+  const [images, setImages] = useState<any>({})
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     const fetchInitialPosts = async () => {
-      const response = await axiosInstance.get('3/gallery/hot/viral/0')
+      const response = await axiosInstance.get('3/gallery/t/travel/0')
 
       if (response.status === 200) {
         setImages(response.data.data)
@@ -36,7 +37,23 @@ export default function Example() {
     fetchInitialPosts()
   }, [])
 
+  useEffect(() => {
+    const fetchImages = async () => {
+      const response = await axiosInstance.get(`3/gallery/t/${search}/0`)
+
+      if (response.status === 200) {
+        setImages(response.data.data)
+      }
+    }
+
+    if (search.length > 2) {
+      fetchImages()
+    }
+  }, [search])
+
   console.log('images', images)
+
+  console.log('search', search)
 
   return (
     <div className="lg:p-10 bg-gradient-to-r from-purple-50 via-pink-50 to-red-50">
@@ -88,6 +105,7 @@ export default function Example() {
               <input
                 id="desktop-search"
                 type="search"
+                onChange={(e) => setSearch(e.target.value.toLowerCase())}
                 placeholder="Search"
                 className="block w-full rounded-xl pl-12 placeholder-gray-500 border-transparent focus:border-transparent sm:text-lg focus:ring-0"
               />
@@ -209,8 +227,9 @@ export default function Example() {
           </nav>
 
           <section id="photos" className="mx-8 my-12">
-            {images.length &&
-              images.map(
+            {images &&
+              images.items &&
+              images.items.map(
                 (item) =>
                   item.images &&
                   item.images[0].link.includes('jpg') && (
