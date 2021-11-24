@@ -59,7 +59,7 @@ export default function Example() {
 
   return (
     <div className="lg:p-10 bg-gradient-to-r from-purple-50 via-pink-50 to-red-50">
-      <Meta title="painterest" />
+      <Meta title="Painterest" />
       <Toaster />
       <div className="h-full flex flex-col bg-white p-2 rounded-xl border shadow-lg">
         {/* Top nav*/}
