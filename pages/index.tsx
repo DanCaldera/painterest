@@ -2,7 +2,9 @@ import { Dialog, Transition } from '@headlessui/react'
 import { HomeIcon, MenuIcon, UserIcon, XIcon } from '@heroicons/react/outline'
 import { SearchIcon } from '@heroicons/react/solid'
 import { Fragment, useEffect, useState } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 import { axiosInstance } from '../lib/axiosConfig/axiosSetup'
+import Head from 'next/head'
 
 const user = {
   name: 'Any Venegas',
@@ -32,6 +34,8 @@ export default function Example() {
 
       if (response.status === 200) {
         setImages(response.data.data)
+      } else {
+        toast.error('Something went wrong')
       }
     }
     fetchInitialPosts()
@@ -43,6 +47,8 @@ export default function Example() {
 
       if (response.status === 200) {
         setImages(response.data.data)
+      } else {
+        toast.error('Something went wrong')
       }
     }
 
@@ -51,12 +57,12 @@ export default function Example() {
     }
   }, [search])
 
-  console.log('images', images)
-
-  console.log('search', search)
-
   return (
     <div className="lg:p-10 bg-gradient-to-r from-purple-50 via-pink-50 to-red-50">
+      <Head>
+        <title>Painterest</title>
+      </Head>
+      <Toaster />
       <div className="h-full flex flex-col bg-white p-2 rounded-xl border shadow-lg">
         {/* Top nav*/}
         <header className="flex-shrink-0 relative h-16 bg-white flex items-center my-2">
