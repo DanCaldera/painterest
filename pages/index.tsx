@@ -5,6 +5,7 @@ import { Fragment, useEffect, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { axiosInstance } from '../lib/axiosConfig/axiosSetup'
 import Head from 'next/head'
+import Meta from '../components/Meta'
 
 const user = {
   name: 'Any Venegas',
@@ -59,9 +60,7 @@ export default function Example() {
 
   return (
     <div className="lg:p-10 bg-gradient-to-r from-purple-50 via-pink-50 to-red-50">
-      <Head>
-        <title>Painterest</title>
-      </Head>
+      <Meta title="painterest" />
       <Toaster />
       <div className="h-full flex flex-col bg-white p-2 rounded-xl border shadow-lg">
         {/* Top nav*/}
