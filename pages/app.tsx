@@ -9,6 +9,8 @@ import Meta from '../components/Meta'
 import { auth } from '../firebase'
 import useValidateUser from '../hooks/useValidateUser'
 import { axiosInstance } from '../lib/axiosConfig/axiosSetup'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import Loading from '../components/Loading'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -19,25 +21,14 @@ const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
 export default function App() {
   const [open, setOpen] = useState(false)
   const [openModal, setOpenModal] = useState(false)
-  const [images, setImages] = useState<any>(null)
-  const [search, setSearch] = useState('')
+  const [images, setImages] = useState<any>([])
+  const [search, setSearch] = useState('travel')
+  const [mobileSearch, setMobileSearch] = useState('')
   const [visible, setVisible] = useState(false)
   const [selectedImage, setSelectedImage] = useState('')
   const { authenticatedUser, isValidatingUser } = useValidateUser()
+  const [page, setPage] = useState(1)
   const router = useRouter()
-
-  useEffect(() => {
-    const fetchInitialPosts = async () => {
-      const response = await axiosInstance.get('3/gallery/t/travel/0')
-
-      if (response.status === 200) {
-        setImages(response.data.data)
-      } else {
-        toast.error('Something went wrong')
-      }
-    }
-    fetchInitialPosts()
-  }, [])
 
   // Quick way to protect app route
   useEffect(() => {
@@ -53,7 +44,7 @@ export default function App() {
       const response = await axiosInstance.get(`3/gallery/t/${search}/0`)
 
       if (response.status === 200) {
-        setImages(response.data.data)
+        setImages(response.data.data.items)
       } else {
         toast.error('Something went wrong')
       }
@@ -64,9 +55,24 @@ export default function App() {
     }
   }, [search])
 
-  const logOut = async () => {
+  const _logOut = async () => {
     await auth.signOut()
     router.replace('/')
+  }
+
+  const _fetchMoreData = async () => {
+    const response = await axiosInstance.get(`3/gallery/t/${search}/${page}`)
+    if (response.status === 200) {
+      setPage(page + 1)
+      setImages(images.concat(response.data.data.items))
+    } else {
+      toast.error('Something went wrong')
+    }
+  }
+
+  const _searchFromMobileSlider = () => {
+    setSearch(mobileSearch)
+    setOpen(false)
   }
 
   return (
@@ -179,7 +185,7 @@ export default function App() {
                           <div className="relative w-full text-gray-400 focus-within:text-gray-500">
                             <label className="sr-only">Search</label>
                             <input
-                              onChange={(e) => setSearch(e.target.value.toLowerCase())}
+                              onChange={(e) => setMobileSearch(e.target.value.toLowerCase())}
                               type="search"
                               placeholder="Search"
                               className="block w-full border-gray-300 rounded-md pl-10 placeholder-gray-500 focus:border-pink-600 focus:ring-pink-600"
@@ -188,7 +194,12 @@ export default function App() {
                               <SearchIcon className="h-5 w-5" aria-hidden="true" />
                             </div>
                           </div>
-                          <button className="bg-pink-500 text-white ml-2 p-2 rounded-md">Go</button>
+                          <button
+                            onClick={() => _searchFromMobileSlider()}
+                            className="bg-pink-500 text-white ml-2 p-2 rounded-md"
+                          >
+                            Go
+                          </button>
                         </div>
 
                         <div className="pt-4 pb-3">
@@ -204,7 +215,7 @@ export default function App() {
                           </div>
                           <div className="mt-3 max-w-8xl mx-auto px-2 space-y-1 sm:px-4">
                             <button
-                              onClick={() => logOut()}
+                              onClick={() => _logOut()}
                               className="block rounded-xl py-2 px-3 text-base font-medium text-pink-500 hover:bg-gray-50"
                             >
                               Sign out
@@ -253,25 +264,27 @@ export default function App() {
             </div>
           </nav>
 
-          <section id="photos" className="mx-8 my-12">
-            {images &&
-              images.items &&
-              images.items.map(
-                (item) =>
-                  item.images &&
-                  item.images[0].link.includes('jpg') && (
-                    <img
-                      onClick={() => {
-                        setVisible(true)
-                        setSelectedImage(item.images[0].link)
-                      }}
-                      className="p-2 rounded-xl cursor-pointer img"
-                      src={item.images ? item.images[0].link : ''}
-                      alt="Image"
-                    />
-                  )
-              )}
-          </section>
+          <InfiniteScroll dataLength={images.length} next={_fetchMoreData} hasMore={true} loader={<Loading />}>
+            <section id="photos" className="mx-8 my-12">
+              {images &&
+                images.map(
+                  (item) =>
+                    item.images &&
+                    item.images[0].link.includes('jpg') && (
+                      <img
+                        loading="lazy"
+                        onClick={() => {
+                          setVisible(true)
+                          setSelectedImage(item.images[0].link)
+                        }}
+                        className="p-2 rounded-xl cursor-pointer img"
+                        src={item.images ? item.images[0].link : ''}
+                        alt="Image"
+                      />
+                    )
+                )}
+            </section>
+          </InfiniteScroll>
 
           <ReactViewer visible={visible} onClose={() => setVisible(false)} images={[{ src: selectedImage }]} />
 
@@ -327,7 +340,7 @@ export default function App() {
                       <button
                         type="button"
                         className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-pink-600 text-base font-medium text-white hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:text-sm"
-                        onClick={() => logOut()}
+                        onClick={() => _logOut()}
                       >
                         Sign Out
                       </button>
