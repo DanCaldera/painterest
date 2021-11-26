@@ -23,10 +23,8 @@ export default function App() {
   const [search, setSearch] = useState('')
   const [visible, setVisible] = useState(false)
   const [selectedImage, setSelectedImage] = useState('')
-  const { authenticatedUser } = useValidateUser()
+  const { authenticatedUser, isValidatingUser } = useValidateUser()
   const router = useRouter()
-
-  console.log(authenticatedUser)
 
   useEffect(() => {
     const fetchInitialPosts = async () => {
@@ -40,6 +38,15 @@ export default function App() {
     }
     fetchInitialPosts()
   }, [])
+
+  // Quick way to protect app route
+  useEffect(() => {
+    if (!isValidatingUser) {
+      if (!authenticatedUser) {
+        router.replace('/')
+      }
+    }
+  }, [isValidatingUser])
 
   useEffect(() => {
     const fetchImages = async () => {
