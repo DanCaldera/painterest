@@ -1,12 +1,16 @@
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import Meta from '../components/Meta'
 import { firebase } from '../firebase'
+import useValidateUser from '../hooks/useValidateUser'
 
 const provider = new firebase.auth.GoogleAuthProvider()
 
 export default function Index() {
   const router = useRouter()
+  const { authenticatedUser, isValidatingUser } = useValidateUser()
+
   const signInWithGoogle = () => {
     firebase
       .auth()
@@ -31,6 +35,15 @@ export default function Index() {
         // ...
       })
   }
+
+  // Quick way to protect app route
+  useEffect(() => {
+    if (!isValidatingUser) {
+      if (authenticatedUser) {
+        router.replace('/app')
+      }
+    }
+  }, [isValidatingUser])
 
   return (
     <div className="lg:p-10 bg-gradient-to-r from-purple-50 via-pink-50 to-red-50 min-h-screen">
