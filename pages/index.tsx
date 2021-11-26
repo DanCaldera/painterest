@@ -1,6 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { HomeIcon, MenuIcon, UserIcon, XIcon } from '@heroicons/react/outline'
 import { SearchIcon } from '@heroicons/react/solid'
+import dynamic from 'next/dynamic'
 import { Fragment, useEffect, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import Meta from '../components/Meta'
@@ -23,10 +24,14 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
+
 export default function Example() {
   const [open, setOpen] = useState(false)
   const [images, setImages] = useState<any>(null)
   const [search, setSearch] = useState('')
+  const [visible, setVisible] = useState(false)
+  const [selectedImage, setSelectedImage] = useState('')
 
   useEffect(() => {
     const fetchInitialPosts = async () => {
@@ -103,11 +108,8 @@ export default function Example() {
           {/* Desktop nav area */}
           <div className="hidden lg:flex-1 lg:flex">
             <div className="w-full mx-8 border border-gray-400 rounded-xl relative text-gray-400 focus-within:text-gray-500">
-              <label htmlFor="desktop-search" className="sr-only">
-                Search
-              </label>
+              <label className="sr-only">Search</label>
               <input
-                id="desktop-search"
                 type="search"
                 onChange={(e) => setSearch(e.target.value.toLowerCase())}
                 placeholder="Search"
@@ -166,11 +168,9 @@ export default function Example() {
                   </div>
                   <div className="mt-2 max-w-8xl mx-auto px-4 sm:px-6">
                     <div className="relative text-gray-400 focus-within:text-gray-500">
-                      <label htmlFor="mobile-search" className="sr-only">
-                        Search
-                      </label>
+                      <label className="sr-only">Search</label>
                       <input
-                        id="mobile-search"
+                        onChange={(e) => setSearch(e.target.value.toLowerCase())}
                         type="search"
                         placeholder="Search"
                         className="block w-full border-gray-300 rounded-md pl-10 placeholder-gray-500 focus:border-pink-600 focus:ring-pink-600"
@@ -237,10 +237,20 @@ export default function Example() {
                 (item) =>
                   item.images &&
                   item.images[0].link.includes('jpg') && (
-                    <img className="p-2 rounded-xl" src={item.images ? item.images[0].link : ''} alt="Image" />
+                    <img
+                      onClick={() => {
+                        setVisible(true)
+                        setSelectedImage(item.images[0].link)
+                      }}
+                      className="p-2 rounded-xl"
+                      src={item.images ? item.images[0].link : ''}
+                      alt="Image"
+                    />
                   )
               )}
           </section>
+
+          <ReactViewer visible={visible} onClose={() => setVisible(false)} images={[{ src: selectedImage }]} />
         </div>
       </div>
     </div>

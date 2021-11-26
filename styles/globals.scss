@@ -71,3 +71,27 @@
     column-count: 1;
   }
 }
+
+img {
+  max-width: 640px;
+}
+
+img:-webkit-full-screen {
+  max-width: none;
+}
+
+img:-moz-full-screen {
+  max-width: none;
+}
+
+img:-ms-fullscreen {
+  max-width: none;
+}
+
+img:full-screen {
+  max-width: none;
+}
+
+img:fullscreen {
+  max-width: none;
+}
