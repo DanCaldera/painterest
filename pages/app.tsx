@@ -21,7 +21,7 @@ function classNames(...classes) {
 const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
 
 export default function App() {
-  const [open, setOpen] = useState<boolean>(false)
+  const [openSlider, setOpenSlider] = useState<boolean>(false)
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [images, setImages] = useState<Image | any>([])
   const [search, setSearch] = useState<string>('travel')
@@ -74,7 +74,7 @@ export default function App() {
 
   const _searchFromMobileSlider = () => {
     setSearch(mobileSearch)
-    setOpen(false)
+    setOpenSlider(false)
   }
 
   return (
@@ -113,7 +113,7 @@ export default function App() {
             <button
               type="button"
               className="-mr-2 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-600"
-              onClick={() => setOpen(true)}
+              onClick={() => setOpenSlider(true)}
             >
               <span className="sr-only">Open main menu</span>
               <MenuIcon className="block h-6 w-6" aria-hidden="true" />
@@ -137,8 +137,8 @@ export default function App() {
           </div>
 
           {/* Mobile menu, show/hide this `div` based on menu open/closed state */}
-          <Transition.Root show={open} as={Fragment}>
-            <Dialog as="div" className="fixed inset-0 overflow-hidden" onClose={setOpen}>
+          <Transition.Root show={openSlider} as={Fragment}>
+            <Dialog as="div" className="fixed inset-0 overflow-hidden" onClose={setOpenSlider}>
               <div className="absolute inset-0 overflow-hidden">
                 <Dialog.Overlay className="absolute inset-0" />
 
@@ -177,7 +177,7 @@ export default function App() {
                           <button
                             type="button"
                             className="-mr-2 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-600"
-                            onClick={() => setOpen(false)}
+                            onClick={() => setOpenSlider(false)}
                           >
                             <span className="sr-only">Close main menu</span>
                             <XIcon className="block h-6 w-6" aria-hidden="true" />
