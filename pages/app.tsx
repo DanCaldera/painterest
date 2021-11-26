@@ -2,9 +2,11 @@ import { Dialog, Transition } from '@headlessui/react'
 import { HomeIcon, MenuIcon, UserIcon, XIcon } from '@heroicons/react/outline'
 import { SearchIcon } from '@heroicons/react/solid'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import Meta from '../components/Meta'
+import { auth } from '../firebase'
 import useValidateUser from '../hooks/useValidateUser'
 import { axiosInstance } from '../lib/axiosConfig/axiosSetup'
 
@@ -24,6 +26,7 @@ export default function App() {
   const [visible, setVisible] = useState(false)
   const [selectedImage, setSelectedImage] = useState('')
   const { authenticatedUser } = useValidateUser()
+  const router = useRouter()
 
   console.log(authenticatedUser)
 
@@ -55,6 +58,11 @@ export default function App() {
       fetchImages()
     }
   }, [search])
+
+  const logOut = async () => {
+    await auth.signOut()
+    router.replace('/')
+  }
 
   return (
     <div className="lg:p-10 bg-gradient-to-r from-purple-50 via-pink-50 to-red-50">
@@ -310,7 +318,7 @@ export default function App() {
                       <button
                         type="button"
                         className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-pink-600 text-base font-medium text-white hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:text-sm"
-                        onClick={() => setOpenModal(false)}
+                        onClick={() => logOut()}
                       >
                         Sign Out
                       </button>
