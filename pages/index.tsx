@@ -1,321 +1,149 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { HomeIcon, MenuIcon, UserIcon, XIcon } from '@heroicons/react/outline'
-import { SearchIcon } from '@heroicons/react/solid'
-import dynamic from 'next/dynamic'
-import { Fragment, useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import toast, { Toaster } from 'react-hot-toast'
 import Meta from '../components/Meta'
-import { axiosInstance } from '../lib/axiosConfig/axiosSetup'
+import { firebase } from '../firebase'
 
-const userNavigation = [{ name: 'Sign out', href: '/' }]
+const provider = new firebase.auth.GoogleAuthProvider()
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
-const ReactViewer = dynamic(() => import('react-viewer'), { ssr: false })
-
-export default function Example() {
-  const [open, setOpen] = useState(false)
-  const [openModal, setOpenModal] = useState(false)
-  const [images, setImages] = useState<any>(null)
-  const [search, setSearch] = useState('')
-  const [visible, setVisible] = useState(false)
-  const [selectedImage, setSelectedImage] = useState('')
-
-  useEffect(() => {
-    const fetchInitialPosts = async () => {
-      const response = await axiosInstance.get('3/gallery/t/travel/0')
-
-      if (response.status === 200) {
-        setImages(response.data.data)
-      } else {
-        toast.error('Something went wrong')
-      }
-    }
-    fetchInitialPosts()
-  }, [])
-
-  useEffect(() => {
-    const fetchImages = async () => {
-      const response = await axiosInstance.get(`3/gallery/t/${search}/0`)
-
-      if (response.status === 200) {
-        setImages(response.data.data)
-      } else {
-        toast.error('Something went wrong')
-      }
-    }
-
-    if (search.length > 2) {
-      fetchImages()
-    }
-  }, [search])
+export default function Index() {
+  const router = useRouter()
+  const signInWithGoogle = () => {
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then(function (result) {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        // var token = result.credential.accessToken
+        // The signed-in user info.
+        // var user = result.user
+        // ...
+        router.replace('/app')
+      })
+      .catch(function (error) {
+        // Handle Errors here.
+        // var errorCode = error.code
+        var errorMessage = error.message
+        toast.error(errorMessage)
+        // The email of the user's account used.
+        // var email = error.email
+        // The firebase.auth.AuthCredential type that was used.
+        // var credential = error.credential
+        // ...
+      })
+  }
 
   return (
-    <div className="lg:p-10 bg-gradient-to-r from-purple-50 via-pink-50 to-red-50">
+    <div className="lg:p-10 bg-gradient-to-r from-purple-50 via-pink-50 to-red-50 min-h-screen">
       <Meta title="Painterest" />
       <Toaster />
-      <div className="h-full flex flex-col bg-white p-2 rounded-xl border shadow-lg">
-        {/* Top nav*/}
-        <header className="flex-shrink-0 relative h-16 bg-white flex items-center my-2">
-          {/* Logo area */}
-          <div className="absolute inset-y-0 left-0 lg:static lg:flex-shrink-0">
-            <a
-              href="/"
-              className="flex items-center justify-center h-16 w-16 bg-pink-400 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-600 m-7"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-auto text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-            </a>
-          </div>
-
-          {/* Menu button area */}
-          <div className="absolute right-0 pr-10 mt-16 flex items-center sm:pr-6 lg:hidden">
-            {/* Mobile menu button */}
-            <button
-              type="button"
-              className="-mr-2 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-600"
-              onClick={() => setOpen(true)}
-            >
-              <span className="sr-only">Open main menu</span>
-              <MenuIcon className="block h-6 w-6" aria-hidden="true" />
-            </button>
-          </div>
-
-          {/* Desktop nav area */}
-          <div className="hidden lg:flex-1 lg:flex">
-            <div className="w-full mx-8 border border-gray-400 rounded-xl relative text-gray-400 focus-within:text-gray-500">
-              <label className="sr-only">Search</label>
-              <input
-                type="search"
-                onChange={(e) => setSearch(e.target.value.toLowerCase())}
-                placeholder="Search"
-                className="block w-full rounded-xl pl-12 placeholder-gray-500 border-transparent focus:border-transparent sm:text-lg focus:ring-0"
-              />
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-4">
-                <SearchIcon className="h-5 w-5" aria-hidden="true" />
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile menu, show/hide this `div` based on menu open/closed state */}
-          <Transition.Root show={open} as={Fragment}>
-            <Dialog as="div" className="fixed inset-0 overflow-hidden" onClose={setOpen}>
-              <div className="absolute inset-0 overflow-hidden">
-                <Dialog.Overlay className="absolute inset-0" />
-
-                <div className="fixed inset-y-0 right-0 pl-10 max-w-full flex">
-                  <Transition.Child
-                    as={Fragment}
-                    enter="transform transition ease-in-out duration-500 sm:duration-700"
-                    enterFrom="translate-x-full"
-                    enterTo="translate-x-0"
-                    leave="transform transition ease-in-out duration-500 sm:duration-700"
-                    leaveFrom="translate-x-0"
-                    leaveTo="translate-x-full"
-                  >
-                    <div className="w-screen max-w-md">
-                      <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
-                        <div className="h-16 flex items-center justify-between px-4 sm:px-6 mb-4">
-                          <a
-                            href="/"
-                            className="flex items-center justify-center h-16 w-16 bg-pink-400 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-600"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-8 w-auto text-white"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                              />
-                            </svg>
-                          </a>
-                          <button
-                            type="button"
-                            className="-mr-2 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-600"
-                            onClick={() => setOpen(false)}
-                          >
-                            <span className="sr-only">Close main menu</span>
-                            <XIcon className="block h-6 w-6" aria-hidden="true" />
-                          </button>
-                        </div>
-                        <div className="mt-2 w-full px-4 sm:px-6 flex items-center">
-                          <div className="relative w-full text-gray-400 focus-within:text-gray-500">
-                            <label className="sr-only">Search</label>
-                            <input
-                              onChange={(e) => setSearch(e.target.value.toLowerCase())}
-                              type="search"
-                              placeholder="Search"
-                              className="block w-full border-gray-300 rounded-md pl-10 placeholder-gray-500 focus:border-pink-600 focus:ring-pink-600"
-                            />
-                            <div className="absolute inset-y-0 left-0 flex items-center justify-center pl-3">
-                              <SearchIcon className="h-5 w-5" aria-hidden="true" />
-                            </div>
-                          </div>
-                          <button className="bg-pink-500 text-white ml-2 p-2 rounded-md">Go</button>
-                        </div>
-
-                        <div className="pt-4 pb-3">
-                          <div className="max-w-8xl mx-auto px-4 flex items-center sm:px-6">
-                            <div className="ml-3 min-w-0 flex-1">
-                              <div className="text-base font-medium text-gray-800 truncate">{'asd'}</div>
-                              <div className="text-sm font-medium text-gray-500 truncate">{'asdasd@asdas.com'}</div>
-                            </div>
-                          </div>
-                          <div className="mt-3 max-w-8xl mx-auto px-2 space-y-1 sm:px-4">
-                            {userNavigation.map((item) => (
-                              <a
-                                key={item.name}
-                                href={item.href}
-                                className="block rounded-xl py-2 px-3 text-base font-medium text-pink-500 hover:bg-gray-50"
-                              >
-                                {item.name}
-                              </a>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Transition.Child>
-                </div>
-              </div>
-            </Dialog>
-          </Transition.Root>
-        </header>
-
-        {/* Bottom section */}
-        <div className="min-h-0 flex-1 flex overflow-hidden">
-          {/* Narrow sidebar*/}
-          <nav aria-label="Sidebar" className="hidden lg:block lg:flex-shrink-0 lg:bg-white lg:overflow-y-auto">
-            <div className="relative w-30 flex flex-col pl-8 space-y-3 pt-2">
+      <div className="min-h-screen flex bg-white p-2 rounded-xl border shadow-lg">
+        <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+          <div className="mx-auto w-full max-w-sm lg:w-96">
+            <div>
               <a
-                key={'Home'}
-                href={'/'}
-                className={classNames(
-                  false ? 'bg-gray-100 text-gray-700' : 'text-gray-700 hover:bg-gray-100',
-                  'flex-shrink-0 inline-flex items-center justify-center h-14 w-14 rounded-full border border-gray-300'
-                )}
+                href="/"
+                className="flex items-center justify-center h-16 w-16 bg-gradient-to-r from-purple-300 via-pink-300 to-red-300 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-600"
               >
-                <span className="sr-only">{'Home'}</span>
-                <HomeIcon className="h-6 w-6" aria-hidden="true" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-auto text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
               </a>
+              <h2 className="mt-6 text-3xl font-extrabold text-gray-900">Sign in to Painterest</h2>
             </div>
-            <div className="relative w-30 flex flex-col pl-8 pt-2">
-              <div className="dropdown inline-block">
-                <button
-                  onClick={() => setOpenModal(true)}
-                  className={classNames(
-                    false ? 'bg-gray-100 text-gray-700' : 'text-gray-700 hover:bg-gray-100',
-                    'flex-shrink-0 inline-flex items-center justify-center h-14 w-14 rounded-full border border-gray-300'
-                  )}
-                >
-                  <span className="sr-only">{'Profile Modal'}</span>
-                  <UserIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-          </nav>
 
-          <section id="photos" className="mx-8 my-12 ml-16">
-            {images &&
-              images.items &&
-              images.items.map(
-                (item) =>
-                  item.images &&
-                  item.images[0].link.includes('jpg') && (
-                    <img
-                      onClick={() => {
-                        setVisible(true)
-                        setSelectedImage(item.images[0].link)
-                      }}
-                      className="p-2 rounded-xl cursor-pointer"
-                      src={item.images ? item.images[0].link : ''}
-                      alt="Image"
-                    />
-                  )
-              )}
-          </section>
+            <div className="mt-8">
+              <div>
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Sign in with</p>
 
-          <ReactViewer visible={visible} onClose={() => setVisible(false)} images={[{ src: selectedImage }]} />
-
-          <Transition.Root show={openModal} as={Fragment}>
-            <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={setOpenModal}>
-              <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <Transition.Child
-                  as={Fragment}
-                  enter="ease-out duration-300"
-                  enterFrom="opacity-0"
-                  enterTo="opacity-100"
-                  leave="ease-in duration-200"
-                  leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                >
-                  <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-                </Transition.Child>
-
-                {/* This element is to trick the browser into centering the modal contents. */}
-                <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
-                  &#8203;
-                </span>
-                <Transition.Child
-                  as={Fragment}
-                  enter="ease-out duration-300"
-                  enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                  enterTo="opacity-100 translate-y-0 sm:scale-100"
-                  leave="ease-in duration-200"
-                  leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                  leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                >
-                  <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
-                    <div className="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
-                      <button
-                        type="button"
-                        className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
-                        onClick={() => setOpenModal(false)}
-                      >
-                        <span className="sr-only">Close</span>
-                        <XIcon className="h-6 w-6" aria-hidden="true" />
-                      </button>
-                    </div>
+                  <div className="mt-1 grid">
                     <div>
-                      <div className="px-4 py-3">
-                        <p className="text-sm">Signed in as</p>
-                        <p className="text-sm font-medium text-gray-900 truncate">tom@example.com</p>
-                      </div>
-                    </div>
-                    <div className="mt-5 sm:mt-6">
                       <button
-                        type="button"
-                        className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-pink-600 text-base font-medium text-white hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:text-sm"
-                        onClick={() => setOpenModal(false)}
+                        onClick={() => signInWithGoogle()}
+                        className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                       >
-                        Sign Out
+                        <span className="sr-only">Sign in with Google</span>
+                        <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+                          <path
+                            fill="#8bb7f0"
+                            d="M28.229,29.396c1.528-1.345,2.711-3.051,3.438-4.968c0.187-0.491,0.321-0.905,0.423-1.303 l0.16-0.625H20.5v-6h17.662c0.225,1.167,0.338,2.343,0.338,3.5c0,5.005-2.069,9.834-5.692,13.32L28.229,29.396z"
+                          />
+                          <path
+                            fill="#4e7ab5"
+                            d="M37.744,17C37.914,18.002,38,19.008,38,20c0,4.719-1.891,9.277-5.216,12.641l-3.802-3.259 c1.385-1.333,2.465-2.964,3.153-4.777c0.192-0.506,0.332-0.937,0.44-1.355L32.897,22h-1.291H21v-5H37.744 M38.57,16H20v7h11.607 c-0.11,0.428-0.252,0.842-0.406,1.25c-0.772,2.034-2.073,3.808-3.744,5.141l5.367,4.6C36.611,30.518,39,25.544,39,20 C39,18.627,38.847,17.291,38.57,16L38.57,16z"
+                          />
+                          <path
+                            fill="#8bb7f0"
+                            d="M32.828,22c-0.501,3.231-2.175,6.075-4.594,8.058l3.825,3.278c3.175-2.873,5.329-6.852,5.828-11.336 H32.828z"
+                          />
+                          <path
+                            fill="#bae0bd"
+                            d="M20,38.5c-6.903,0-13.128-3.773-16.349-9.877l4.957-3.499C10.625,29.626,15.031,32.5,20,32.5 c2.713,0,5.277-0.851,7.439-2.465l4.624,3.963C28.695,36.906,24.434,38.5,20,38.5z"
+                          />
+                          <path
+                            fill="#5e9c76"
+                            d="M8.411,25.875C10.612,30.242,15.035,33,20,33c2.688,0,5.234-0.803,7.413-2.329l3.876,3.322 C28.086,36.585,24.12,38,20,38c-6.57,0-12.509-3.513-15.697-9.225L8.411,25.875 M8.828,24.357l-5.82,4.108 C6.123,34.704,12.552,39,20,39c4.949,0,9.442-1.908,12.823-5.009l-5.367-4.6C25.411,31.023,22.822,32,20,32 C14.911,32,10.573,28.827,8.828,24.357L8.828,24.357z"
+                          />
+                          <path
+                            fill="#bae0bd"
+                            d="M28.234,30.058C25.992,31.896,23.125,33,20,33c-5.407,0-10.041-3.303-12-8l-4.13,2.95 C6.807,33.899,12.917,38,20,38c4.645,0,8.866-1.775,12.059-4.664L28.234,30.058z"
+                          />
+                          <path
+                            fill="#f78f8f"
+                            d="M3.891,10.907C7.177,5.094,13.31,1.5,20,1.5c4.493,0,8.8,1.632,12.186,4.607l-4.212,4.212 C25.757,8.498,22.944,7.5,20,7.5c-4.84,0-9.196,2.763-11.271,7.093L3.891,10.907z"
+                          />
+                          <path
+                            fill="#c74343"
+                            d="M20,2c4.193,0,8.22,1.462,11.449,4.136l-3.515,3.515C25.688,7.935,22.905,7,20,7 c-4.828,0-9.192,2.643-11.445,6.832l-4.01-3.055C7.791,5.342,13.637,2,20,2 M20,1C12.746,1,6.446,5.068,3.245,11.044l5.682,4.329 C10.738,11.043,15.013,8,20,8c3.059,0,5.881,1.116,8,3l4.911-4.911C29.52,2.94,24.992,1,20,1L20,1z"
+                          />
+                          <g>
+                            <path
+                              fill="#f78f8f"
+                              d="M20,7V2C13.07,2,7.064,5.922,4.056,11.662l4.056,3.09C10.13,10.189,14.689,7,20,7z"
+                            />
+                          </g>
+                          <g>
+                            <path
+                              fill="#ffeea3"
+                              d="M3.235,27.789C2.083,25.324,1.5,22.707,1.5,20c0-2.838,0.661-5.66,1.917-8.197l4.905,3.737 C7.776,16.965,7.5,18.463,7.5,20c0,1.435,0.249,2.851,0.74,4.214L3.235,27.789z"
+                            />
+                            <path
+                              fill="#ba9b48"
+                              d="M3.604,12.574l4.121,3.14C7.244,17.09,7,18.528,7,20c0,1.367,0.217,2.717,0.646,4.024l-4.204,3.003 C2.484,24.791,2,22.432,2,20C2,17.441,2.552,14.897,3.604,12.574 M3.245,11.044C1.815,13.713,1,16.76,1,20 c0,3.075,0.747,5.97,2.044,8.54l5.799-4.142C8.305,23.035,8,21.554,8,20c0-1.64,0.331-3.203,0.927-4.627L3.245,11.044L3.245,11.044 z"
+                            />
+                          </g>
+                          <g>
+                            <path
+                              fill="#ffeea3"
+                              d="M7,20c0-1.869,0.402-3.642,1.112-5.248l-4.056-3.09C2.749,14.156,2,16.989,2,20 c0,2.858,0.684,5.55,1.869,7.951L8,25C7.357,23.461,7,21.772,7,20z"
+                            />
+                          </g>
+                        </svg>
                       </button>
                     </div>
                   </div>
-                </Transition.Child>
+                </div>
               </div>
-            </Dialog>
-          </Transition.Root>
+            </div>
+          </div>
+        </div>
+        <div className="hidden lg:block relative w-0 flex-1 m-10">
+          <img
+            className="absolute inset-0 h-full w-full object-cover rounded-xl"
+            src="https://images.unsplash.com/photo-1554034483-04fda0d3507b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8Z3JhZGllbnQlMjBiYWNrZ3JvdW5kc3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=800&q=60"
+            alt=""
+          />
         </div>
       </div>
     </div>
