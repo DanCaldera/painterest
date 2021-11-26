@@ -51,26 +51,26 @@
   }
 }
 
-img {
+.img {
   max-width: 640px;
 }
 
-img:-webkit-full-screen {
+.img:-webkit-full-screen {
   max-width: none;
 }
 
-img:-moz-full-screen {
+.img:-moz-full-screen {
   max-width: none;
 }
 
-img:-ms-fullscreen {
+.img:-ms-fullscreen {
   max-width: none;
 }
 
-img:full-screen {
+.img:full-screen {
   max-width: none;
 }
 
-img:fullscreen {
+.img:fullscreen {
   max-width: none;
 }

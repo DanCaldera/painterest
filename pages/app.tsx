@@ -265,7 +265,7 @@ export default function App() {
                         setVisible(true)
                         setSelectedImage(item.images[0].link)
                       }}
-                      className="p-2 rounded-xl cursor-pointer"
+                      className="p-2 rounded-xl cursor-pointer img"
                       src={item.images ? item.images[0].link : ''}
                       alt="Image"
                     />
