@@ -10,8 +10,6 @@ import { auth } from '../firebase'
 import useValidateUser from '../hooks/useValidateUser'
 import { axiosInstance } from '../lib/axiosConfig/axiosSetup'
 
-const userNavigation = [{ name: 'Sign out', href: '/' }]
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
@@ -194,15 +192,12 @@ export default function App() {
                             </div>
                           </div>
                           <div className="mt-3 max-w-8xl mx-auto px-2 space-y-1 sm:px-4">
-                            {userNavigation.map((item) => (
-                              <a
-                                key={item.name}
-                                href={item.href}
-                                className="block rounded-xl py-2 px-3 text-base font-medium text-pink-500 hover:bg-gray-50"
-                              >
-                                {item.name}
-                              </a>
-                            ))}
+                            <button
+                              onClick={() => logOut()}
+                              className="block rounded-xl py-2 px-3 text-base font-medium text-pink-500 hover:bg-gray-50"
+                            >
+                              Sign out
+                            </button>
                           </div>
                         </div>
                       </div>
