@@ -26,6 +26,8 @@ export default function App() {
   const { authenticatedUser, isValidatingUser } = useValidateUser()
   const router = useRouter()
 
+  console.log('auth', authenticatedUser)
+
   useEffect(() => {
     const fetchInitialPosts = async () => {
       const response = await axiosInstance.get('3/gallery/t/travel/0')
@@ -194,8 +196,12 @@ export default function App() {
                         <div className="pt-4 pb-3">
                           <div className="max-w-8xl mx-auto px-4 flex items-center sm:px-6">
                             <div className="ml-3 min-w-0 flex-1">
-                              <div className="text-base font-medium text-gray-800 truncate">{'asd'}</div>
-                              <div className="text-sm font-medium text-gray-500 truncate">{'asdasd@asdas.com'}</div>
+                              <div className="text-base font-medium text-gray-800 truncate">
+                                {authenticatedUser.displayName ? authenticatedUser.displayName : ''}
+                              </div>
+                              <div className="text-sm font-medium text-gray-500 truncate">
+                                {authenticatedUser.email}
+                              </div>
                             </div>
                           </div>
                           <div className="mt-3 max-w-8xl mx-auto px-2 space-y-1 sm:px-4">
@@ -313,7 +319,10 @@ export default function App() {
                     <div>
                       <div className="px-4 py-3">
                         <p className="text-sm">Signed in as</p>
-                        <p className="text-sm font-medium text-gray-900 truncate">tom@example.com</p>
+                        <p className="text-base font-medium text-gray-900 truncate mt-2">
+                          {authenticatedUser.displayName ? authenticatedUser.displayName : ''}
+                        </p>
+                        <p className="text-sm font-medium text-gray-900 truncate">{authenticatedUser.email}</p>
                       </div>
                     </div>
                     <div className="mt-5 sm:mt-6">
